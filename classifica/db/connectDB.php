@@ -1,9 +1,9 @@
 <?php
     # funzione per collegarsi con il database
     function connectDB() {
-        $servername = "localhost";
+        $servername = "db-container";
         $username = "root";
-        $password = "ciccio";
+        $password = " ciccio";
         $dbname = "serie_a";
         $connessione = new mysqli($servername, $username, $password, $dbname);
         if ($connessione->connect_error) 

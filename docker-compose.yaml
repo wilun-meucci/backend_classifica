@@ -1,7 +1,7 @@
 version: "2.2"
 services:
   backend-container:
-    image: php:7.2-apache
+    build: .
     volumes:
       - ./classifica:/var/www/html
     ports:
