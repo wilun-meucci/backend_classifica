@@ -23,10 +23,9 @@
     function getSquadra($id)
     {
         global $connessione;
-        $query = "select * from classifica where squadra = '". $id "'";
-        $result = $conn->query($query);
-        return $result-featch_assoc()["squadra"];
-    
+        $query = "select * from classifica where squadra = '". $id ."'";
+        $result = $connessione->query($query) or die("fail");
+        return $result->featch_assoc()["squadra"];
     }
 
 
