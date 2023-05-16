@@ -16,14 +16,12 @@
     function getClassifica($squadra)
     {
         global $connessione;
-        $sql = "select squadre from classifica where squadra = '$squadra'";
-        $result = $connessione->query($sql) or die("fail");
-        return $result->featch_assoc()["squadra"];
+        
     }
     function getSquadra($id)
     {
         global $connessione;
-        $query = "select * from classifica where squadra = '". $id ."'";
+        $query = "select * from squadra where squadra = '". $id ."'";
         $result = $connessione->query($query) or die("fail");
         return $result->featch_assoc()["squadra"];
     }

@@ -1,6 +1,6 @@
 <?php 
 header('Access-Control-Allow-Origin: *');
-#header('Content-Type: application/json');
+header('Content-Type: application/json; charset=utf-8'); 
 
 
 require("./db/databaseQuery.php");
@@ -15,8 +15,10 @@ echo "[";
     echo "]";
 */
 
-echo "dio";
-echo getSquadra("Juventus");
+$data = ["ciao","come ba?"]; 
+
+echo json_encode($data);
+
     //echo "{name: " . $_GET["squadra"] ."}";
 ?>  
 
