@@ -15,7 +15,7 @@ echo "[";
     echo "]";
 */
 
-
+echo "dio";
 echo getSquadra("Juventus");
     //echo "{name: " . $_GET["squadra"] ."}";
 ?>  
