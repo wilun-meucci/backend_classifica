@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Creato il: Mag 16, 2023 alle 17:31
+-- Creato il: Mag 16, 2023 alle 17:37
 -- Versione del server: 10.4.21-MariaDB
 -- Versione PHP: 8.1.6
 
@@ -20,6 +20,46 @@ SET time_zone = "+00:00";
 --
 -- Database: `serie_a`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `classifica`
+--
+
+CREATE TABLE `classifica` (
+  `id` int(11) NOT NULL,
+  `squadra` int(11) DEFAULT NULL,
+  `punti` int(11) DEFAULT NULL,
+  `GF` int(11) DEFAULT NULL,
+  `GS` int(11) DEFAULT NULL,
+  `vinte` int(11) DEFAULT NULL,
+  `pareggi` int(11) DEFAULT NULL,
+  `sconfitte` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `partita`
+--
+
+CREATE TABLE `partita` (
+  `id` int(11) NOT NULL,
+  `giornata` int(11) DEFAULT NULL,
+  `squadra_casa` int(11) DEFAULT NULL,
+  `squadra_ospite` int(11) DEFAULT NULL,
+  `reti_casa` int(11) DEFAULT NULL,
+  `reti_ospiti` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dump dei dati per la tabella `partita`
+--
+
+INSERT INTO `partita` (`id`, `giornata`, `squadra_casa`, `squadra_ospite`, `reti_casa`, `reti_ospiti`) VALUES
+(1, 1, 5, 14, 4, 1),
+(2, 1, 1, 6, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -63,10 +103,42 @@ INSERT INTO `squadra` (`id`, `nome`) VALUES
 --
 
 --
+-- Indici per le tabelle `classifica`
+--
+ALTER TABLE `classifica`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `squadra` (`squadra`);
+
+--
+-- Indici per le tabelle `partita`
+--
+ALTER TABLE `partita`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `squadra_casa` (`squadra_casa`),
+  ADD KEY `squadra_ospite` (`squadra_ospite`);
+
+--
 -- Indici per le tabelle `squadra`
 --
 ALTER TABLE `squadra`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Limiti per le tabelle scaricate
+--
+
+--
+-- Limiti per la tabella `classifica`
+--
+ALTER TABLE `classifica`
+  ADD CONSTRAINT `classifica_ibfk_1` FOREIGN KEY (`squadra`) REFERENCES `squadra` (`id`);
+
+--
+-- Limiti per la tabella `partita`
+--
+ALTER TABLE `partita`
+  ADD CONSTRAINT `partita_ibfk_1` FOREIGN KEY (`squadra_casa`) REFERENCES `squadra` (`id`),
+  ADD CONSTRAINT `partita_ibfk_2` FOREIGN KEY (`squadra_ospite`) REFERENCES `squadra` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
