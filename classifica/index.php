@@ -1,8 +1,8 @@
 <?php 
 
 
-// header('Access-Control-Allow-Origin: *');
-// header('Content-Type: application/json; charset=utf-8'); 
+header('Access-Control-Allow-Origin: *');
+header('Content-Type: application/json; charset=utf-8'); 
 
 
 require_once "./db/databaseQuery.php";
@@ -65,28 +65,24 @@ if(isset($_GET["creaCalendario"]))
         }      
     }
     else if($request=="giorni")
-    {
-        $combinations = generateCombinations(listSquadre());
-        addCalendario($combinations);
+    {   
+
+        if(checkCalendarioEsistente())
+        {
+            $combinations = getCalendarioBase();
+        }
+        else
+        {
+            $combinations = generateCombinations(listSquadre());
+            addCalendario($combinations);
+        }
         $dayCombinations = generateMatchesByDay($combinations);
 
-        #updateMatchesWithDay($dayCombinations);
-
-        // require_once "./db/connectDB.php";
-        // $query ="select * from partita where giornata = 34";
-        // $result = $connessione->query($query);
-        // $i = 1;
-        // while ($row=$result->fetch_assoc())
-        // {
-        //     echo "giornata: ". $row["giornata"] . " casa: ". $row["squadra_casa"] . " ospite: ". $row["squadra_ospite"] . "<br>";
-        //     echo "index: $i<br>";
-        //     $i+=1;
-        // }
+        updateMatchesWithDay($dayCombinations);
 
 
 
-
-        echo json_encode($dayCombinations);
+        #echo json_encode($dayCombinations);
     }
     else if($request=="ciao")
     {
