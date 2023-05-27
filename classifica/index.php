@@ -1,12 +1,17 @@
 <?php 
 
 
-header('Access-Control-Allow-Origin: *');
-header('Content-Type: application/json; charset=utf-8'); 
+// header('Access-Control-Allow-Origin: *');
+// header('Content-Type: application/json; charset=utf-8'); 
 
 
-require("./db/databaseQuery.php");
-require("./php/function.php");
+require_once "./db/databaseQuery.php";
+require_once "./db/databaseInsert.php";
+require_once "./php/function.php";
+
+
+
+
 
 
 if(isset($_GET["squadra"]))
@@ -22,10 +27,18 @@ if(isset($_GET["squadre"]))
     echo json_encode($data);
 }
 
-if(isset($_GET["calendario"]))
+if(isset($_GET["creaCalendario"]))
 {
-    $request = $_GET["calendario"];
-    $combinations = generateCombinations(listSquadre());
+    if(checkCalendarioEsistente())
+    {
+        $combinations = getCalendarioBase();
+    }
+    else
+    {
+        $combinations = generateCombinations(listSquadre());
+        addCalendario($combinations);
+    }
+    $request = $_GET["creaCalendario"];
     if($request=="squadre")
     {
         $teamsCobinations = organizeByTeams($combinations);
@@ -53,7 +66,26 @@ if(isset($_GET["calendario"]))
     }
     else if($request=="giorni")
     {
+        $combinations = generateCombinations(listSquadre());
+        addCalendario($combinations);
         $dayCombinations = generateMatchesByDay($combinations);
+
+        #updateMatchesWithDay($dayCombinations);
+
+        // require_once "./db/connectDB.php";
+        // $query ="select * from partita where giornata = 34";
+        // $result = $connessione->query($query);
+        // $i = 1;
+        // while ($row=$result->fetch_assoc())
+        // {
+        //     echo "giornata: ". $row["giornata"] . " casa: ". $row["squadra_casa"] . " ospite: ". $row["squadra_ospite"] . "<br>";
+        //     echo "index: $i<br>";
+        //     $i+=1;
+        // }
+
+
+
+
         echo json_encode($dayCombinations);
     }
     else if($request=="ciao")
@@ -66,8 +98,15 @@ if(isset($_GET["calendario"]))
 
     #print_r($combinations);
 }
-$squadre = listSquadre();
-$combinations = generateCombinations($squadre);
+// $squadre = listSquadre();
+// $combinations = generateCombinations($squadre);
+
+
+
+
+
+
+
 ?>  
 
 

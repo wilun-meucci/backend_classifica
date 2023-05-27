@@ -1,6 +1,5 @@
 <?php
-    require ( "connectDB.php");
-    $_SESSION["db"] = $connessione = connectDB();
+    require_once "connectDB.php";
 
     function queryBool($sql)
     {
@@ -13,25 +12,19 @@
         else return false;
     }
 
-    function getClassifica($squadra)
-    {
-        global $connessione;
-        
-    }
     function query($query)
     {
         global $connessione; // Utilizza l'oggetto di connessione globale
         // Esecuzione della query
         $result = $connessione->query($query);
         // Verifica degli eventuali errori nella query
-        if ($result or $result->num_rows>0) {
+        if ($result !== false) {
             return $result;
-        }
-        else 
-        {
+        } else {
             die("Errore nella query: " . $connessione->error);
         }
     }
+
     function getSquadra($id)
     {
         $query = "select * from squadra where id ='" . $id ."' or nome ='". $id."'";

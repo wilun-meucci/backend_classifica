@@ -15,8 +15,6 @@ function generateCombinations($array) {
     return $combinations;
 }
 
-
-
 function organizeByTeams($combinations) {
     $teams = array();
 
@@ -49,7 +47,6 @@ function organizeByTeams($combinations) {
 
     return $teams;
 }
-
 
 function printCombinations($combinations) {
     foreach ($combinations as $combination) {
@@ -120,14 +117,42 @@ function getTeamsByRole($ruolo, $nameTeams) {
     }
 }
 
+function checkCalendarioEsistente() {
+    $query = "SELECT COUNT(*) AS conteggio FROM partita";
+    $result = query($query)->fetch_assoc();
+    $conteggio = $result['conteggio'];
+    $numeroSquadre = count(listSquadre());
+    $combinazioniPossibili = ($numeroSquadre * ($numeroSquadre - 1));
+
+    if ($conteggio == $combinazioniPossibili) {
+        return true; // Il calendario esiste già
+    } else {
+        return false; // Il calendario non esiste ancora
+    }
+}
+
+function getCalendarioBase() {
+    $query = "SELECT sc.nome AS squadra_casa, so.nome AS squadra_ospite
+              FROM partita p
+              JOIN squadra sc ON p.squadra_casa = sc.id
+              JOIN squadra so ON p.squadra_ospite = so.id";
+    $result = query($query);
+    $calendario = array();
+
+    while ($row = $result->fetch_assoc()) {
+        $partita = array($row['squadra_casa'], $row['squadra_ospite']);
+        $calendario[] = $partita;
+    }
+
+    return $calendario;
+}
 
 
-/*
-$test = organizeByHomeAway($combinations);
-print_r($test);
 
-#printCombinations($combinations);
-echo "combinazioni: ". count($test["roma"]);
-#print_r($combinations);
-*/
+
+
+
+
+
+
 ?>
