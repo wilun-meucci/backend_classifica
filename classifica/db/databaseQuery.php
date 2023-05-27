@@ -73,6 +73,31 @@
         }
         return $calendario;
     }
+    function exitResultToGame($casa, $ospite)
+{
+    $retiCQuery = "SELECT reti_casa
+                   FROM partita
+                   WHERE squadra_casa = $casa AND squadra_ospite = $ospite";
+    $retiOQuery = "SELECT reti_ospite
+                   FROM partita
+                   WHERE squadra_casa = $casa AND squadra_ospite = $ospite";
+    
+    $retiCResult = query($retiCQuery);
+    $retiOResult = query($retiOQuery);
+    
+    $retiCasa = $retiCResult->fetch_assoc()["reti_casa"];
+    $retiOspite = $retiOResult->fetch_assoc()["reti_ospite"];
+    
+    if (empty($retiCasa) || is_null($retiCasa)) {
+        return true;
+    }
+    
+    if (empty($retiOspite) || is_null($retiOspite)) {
+        return true;
+    }
+    
+    return false;
+}
 
 
 ?>

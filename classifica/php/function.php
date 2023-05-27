@@ -119,7 +119,12 @@ function getTeamsByRole($ruolo, $nameTeams) {
 
 
 
-
+function generateRandomResult($min, $max)
+{
+    $retiC = rand($min, $max);
+    $retiO = rand($min, $max);
+    return array("casa" => $retiC, "ospite" => $retiO);
+}
 
 
 

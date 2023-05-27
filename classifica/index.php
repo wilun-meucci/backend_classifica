@@ -7,6 +7,7 @@
 
 require_once "./db/databaseQuery.php";
 require_once "./db/databaseInsert.php";
+require_once "./db/databaseUpdate.php";
 require_once "./php/function.php";
 
 
@@ -75,6 +76,30 @@ if(isset($_GET["creaCalendario"]))
 // $squadre = listSquadre();
 // $combinations = generateCombinations($squadre);
 
+if(isset($_GET["giocaPartita"]))
+{
+    if($_GET["giocaPartita"] == "random")
+    {
+        $giornata = $_GET["giornata"];
+        $casa = $_GET["casa"];
+        $ospite =$_GET["ospite"];
+        
+        if(!exitResultToGame($casa,$ospite))
+        {
+            $result = generateRandomResult($_GET["min"] ?? 0,$_GET["max"] ?? 5);
+            if(addPartita($giornata, $casa, $ospite, $result["casa"], $result["ospite"]))
+            {
+                echo "gg";
+            }
+        }
+        else 
+        {
+            echo exitResultToGame($casa,$ospite);
+            echo "esiste gia un risultato";
+        }
+        
+    }
+}
 
 
 
