@@ -1,14 +1,13 @@
 <?php 
 
 
-header('Access-Control-Allow-Origin: *');
-header('Content-Type: application/json; charset=utf-8'); 
+// header('Access-Control-Allow-Origin: *');
+// header('Content-Type: application/json; charset=utf-8'); 
 
 
 require_once "./db/databaseQuery.php";
 require_once "./db/databaseInsert.php";
 require_once "./php/function.php";
-
 
 
 
@@ -61,37 +60,16 @@ if(isset($_GET["creaCalendario"]))
         {
             #print_r($teamsCobinations);
             echo json_encode($teamsCobinations);
-            #echo "oh nono";
         }      
     }
     else if($request=="giorni")
     {   
-
-        if(checkCalendarioEsistente())
-        {
-            $combinations = getCalendarioBase();
-        }
-        else
-        {
-            $combinations = generateCombinations(listSquadre());
-            addCalendario($combinations);
-        }
+        echo "giorni";
         $dayCombinations = generateMatchesByDay($combinations);
-
-        updateMatchesWithDay($dayCombinations);
-
-
-
-        #echo json_encode($dayCombinations);
-    }
-    else if($request=="ciao")
-    {
-        $dayCombinations = generateMatchesByDay($combinations);
+        echo json_encode($dayCombinations);
     }
     else
         echo json_encode($combinations);
-    
-
     #print_r($combinations);
 }
 // $squadre = listSquadre();

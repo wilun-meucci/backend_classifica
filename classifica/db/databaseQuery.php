@@ -32,9 +32,8 @@
     }
     function listSquadre()
     {
-        global $connessione;
         $query = "select * from squadra";
-        $result = $connessione->query($query);
+        $result = query($query);
         $tmp_data = array();
         $data = [];
         while ($row =$result->fetch_assoc())
@@ -47,6 +46,32 @@
         }
         // print_r($data);
         return $data;
+    }
+
+    function checkCalendarioEsistente() {
+        $query = "SELECT COUNT(*) AS conteggio FROM partita";
+        $conteggio = query($query)->fetch_assoc()['conteggio'];
+        $numeroSquadre = count(listSquadre());
+        $combinazioniPossibili = ($numeroSquadre * ($numeroSquadre - 1));
+        if ($conteggio == $combinazioniPossibili) {
+            return true; // Il calendario esiste già
+        } else {
+            return false; // Il calendario non esiste ancora
+        }
+    }
+
+    function getCalendarioBase() {
+        $query = "SELECT sc.nome AS squadra_casa, so.nome AS squadra_ospite
+                  FROM partita p
+                  JOIN squadra sc ON p.squadra_casa = sc.id
+                  JOIN squadra so ON p.squadra_ospite = so.id";
+        $result = query($query);
+        $calendario = array();
+        while ($row = $result->fetch_assoc()) {
+            $partita = array($row['squadra_casa'], $row['squadra_ospite']);
+            $calendario[] = $partita;
+        }
+        return $calendario;
     }
 
 
