@@ -26,30 +26,31 @@
         
         if(checkDay($giornata))
         {
-            echo "ok";
-        }
-        $idCasa = getSquadra($casa)["id"];
-        // echo "<br>casa: ".$idCasa;
-        $idOspite =  getSquadra($ospite)["id"];
-        // echo "<br>ospite: ".$idOspite;
-        // Verifica se il risultato è già presente
-        if (dontExitResultToGame($idCasa,$idOspite,$giornata)) {
-            // Aggiorna i valori delle reti
-            $query = "UPDATE partita SET reti_casa = $retiCasa, reti_ospite = $retiOspite WHERE squadra_casa = $idCasa AND squadra_ospite = $idOspite and giornata=$giornata ";
-            if($connessione->query($query))
-            {
-                return true;
+            $idCasa = getSquadra($casa)["id"];
+             // echo "<br>casa: ".$idCasa;
+            $idOspite =  getSquadra($ospite)["id"];
+            // echo "<br>ospite: ".$idOspite;
+            // Verifica se il risultato è già presente
+            if (dontExitResultToGame($idCasa,$idOspite,$giornata)) {
+                // Aggiorna i valori delle reti
+                $query = "UPDATE partita SET reti_casa = $retiCasa, reti_ospite = $retiOspite WHERE squadra_casa = $idCasa AND squadra_ospite = $idOspite and giornata=$giornata ";
+                if($connessione->query($query))
+                {
+                    return true;
+                }
+                else 
+                {
+                    // echo "why?";
+                    echo $connessione->error;
+                }
+                
+            } else {
+                // echo "perche?";
+                return false;
             }
-            else 
-            {
-                // echo "why?";
-                echo $connessione->error;
-            }
-            
-        } else {
-            // echo "perche?";
-            return false;
         }
+        
+        
     }
 
 function addGiornata($giornata)

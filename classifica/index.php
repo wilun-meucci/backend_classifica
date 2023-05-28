@@ -104,16 +104,17 @@ if(isset($_GET["giocaGiornata"]))
         $giornata = $_GET["giornata"];
         if(addGiornata($giornata))
         {
-            $partitaGiornata = getGiornata($i);
+            $partitaGiornata = getGiornata($giornata);
             echo json_encode($partitaGiornata);
         }
-        else echo "non riuscito";
-    
-        
-        
     }
 }
 
+if(isset($_GET["classifica"]))
+{
+    $classifica = getClassifica();
+    echo json_encode($classifica);
+}
 
 
 
