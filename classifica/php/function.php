@@ -128,6 +128,30 @@ function generateRandomResult($min, $max)
 
 
 
+function checkDay($giornata)
+{
+    if($giornata == 1)
+    {
+        return true;
+    }
+    $partite = listPartite();
+    foreach ($partite as $i => $partita) 
+    {
+        if($giornata > $partita["giornata"])
+        {
+            if(dontExitResultToGame($partita["casa"],$partita["ospite"], $partita["giornata"]))
+            {
+                echo "Gioca prima le altre giornate";
+                return false;
+            }
+        }
+    }
+    return true;
+    
+}
+
+
+
 
 
 

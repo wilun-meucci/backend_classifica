@@ -31,10 +31,12 @@ if(isset($_GET["creaCalendario"]))
 {
     if(checkCalendarioEsistente())
     {
+        unset($combinations);
         $combinations = getCalendarioBase();
     }
     else
     {
+        // echo "on no";
         $combinations = generateCombinations(listSquadre());
         addCalendario($combinations);
     }
@@ -83,20 +85,31 @@ if(isset($_GET["giocaPartita"]))
         $giornata = $_GET["giornata"];
         $casa = $_GET["casa"];
         $ospite =$_GET["ospite"];
-        
-        if(!exitResultToGame($casa,$ospite))
+        if(dontExitResultToGame($casa,$ospite, $giornata))
         {
-            $result = generateRandomResult($_GET["min"] ?? 0,$_GET["max"] ?? 5);
-            if(addPartita($giornata, $casa, $ospite, $result["casa"], $result["ospite"]))
+            $result = generateRandomResult($_GET["min"] ?? 0,$_GET["max"] ?? 10);
+            if(addPartita($giornata ,$casa, $ospite, $result["casa"], $result["ospite"]))
             {
-                echo "gg";
+                $partita = getPartita($casa,$ospite);
+                echo json_encode($partita);
             }
         }
-        else 
+        
+    }
+}
+if(isset($_GET["giocaGiornata"]))
+{
+    if($_GET["giocaGiornata"] == "random")
+    {
+        $giornata = $_GET["giornata"];
+        if(addGiornata($giornata))
         {
-            echo exitResultToGame($casa,$ospite);
-            echo "esiste gia un risultato";
+            $partitaGiornata = getGiornata($i);
+            echo json_encode($partitaGiornata);
         }
+        else echo "non riuscito";
+    
+        
         
     }
 }
