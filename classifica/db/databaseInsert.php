@@ -7,6 +7,7 @@
     function addCalendario($combinations) {
         global $connessione;
         $matches = generateMatchesByDay($combinations);
+        print_r($matches);
         $day = 1;
         foreach ($matches as $matchesOfDay) {
             foreach ($matchesOfDay as $match) {
