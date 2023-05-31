@@ -206,4 +206,136 @@ function getCalendario($orderMode)
 
 
 
+
+
+function getCalendarioByDay()
+{
+    global $connessione; // Utilizziamo la variabile globale $conn per la connessione al database
+
+    $calendario = array();
+
+    for ($i = 0; $i < 38; $i++) { // Corregiamo l'iterazione da 1 a 38 (invece di 39)
+
+        $query = "SELECT p.id, p.giornata, sc.nome AS squadra_casa, so.nome AS squadra_ospite, p.reti_casa, p.reti_ospite
+                  FROM partita p
+                  JOIN squadra sc ON p.squadra_casa = sc.id
+                  JOIN squadra so ON p.squadra_ospite = so.id
+                  WHERE p.giornata = $i+1";
+
+        $result = $connessione->query($query);
+
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $giornata = $row["giornata"];
+
+                // Se la giornata non esiste nell'array, crea un nuovo array per quella giornata
+                if (!isset($calendario[$giornata])) {
+                    $calendario[$giornata] = array();
+                }
+
+                // Aggiungi l'elemento corrente all'array della giornata corrispondente
+                $partita = array(
+                    "id" => $row["id"],
+                    "squadra_casa" => $row["squadra_casa"],
+                    "squadra_ospite" => $row["squadra_ospite"],
+                    "reti_casa" => $row["reti_casa"],
+                    "reti_ospite" => $row["reti_ospite"]
+                );
+
+                $calendario[$giornata][] = $partita;
+            }
+        }
+    }
+
+    return $calendario;
+}
+
+function old_getCalendarioByTeams()
+{
+    global $connessione; // Utilizziamo la variabile globale $connessione per la connessione al database
+
+    $calendario = array();
+    $squadre = listSquadre();
+    foreach ($squadre as ["nome" => $nome]) {
+        $query = "SELECT p.id, p.giornata, sc.nome AS squadra_casa, so.nome AS squadra_ospite, p.reti_casa, p.reti_ospite
+                  FROM partita p
+                  JOIN squadra sc ON p.squadra_casa = sc.id
+                  JOIN squadra so ON p.squadra_ospite = so.id
+                  WHERE sc.nome = '$nome'";
+
+        $result = $connessione->query($query);
+
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $team = $row["squadra_casa"];
+
+                // Se la squadra non esiste nell'array, crea un nuovo array per quella squadra
+                if (!isset($calendario[$team])) {
+                    $calendario[$team] = array();
+                }
+
+                // Aggiungi l'elemento corrente all'array della squadra corrispondente
+                $partita = array(
+                    "id" => $row["id"],
+                    "squadra_casa" => $row["squadra_casa"],
+                    "squadra_ospite" => $row["squadra_ospite"],
+                    "reti_casa" => $row["reti_casa"],
+                    "reti_ospite" => $row["reti_ospite"]
+                );
+
+                $calendario[$team][] = $partita;
+            }
+        }
+    }
+
+    return $calendario;
+}
+
+function getCalendarioByTeams()
+{
+    global $connessione;
+    $squadre = listSquadre();
+    
+    $calendario = array();
+    
+    foreach ($squadre as ["nome" => $nomeSquadra]) {
+        $calendario[$nomeSquadra] = array("casa" => array(), "ospite" => array());
+        $query = "SELECT p.id, p.giornata, sc.nome AS squadra_casa, so.nome AS squadra_ospite, p.reti_casa, p.reti_ospite
+                FROM partita p
+                JOIN squadra sc ON p.squadra_casa = sc.id
+                JOIN squadra so ON p.squadra_ospite = so.id
+                WHERE sc.nome = '$nomeSquadra' OR so.nome = '$nomeSquadra'";
+
+        $result = $connessione->query($query);
+
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                if ($row["squadra_casa"] === $nomeSquadra) {
+                    $partita = array(
+                        "id" => $row["id"],
+                        "giornata" => $row["giornata"],
+                        "squadra_ospite" => $row["squadra_ospite"],
+                        "reti_casa" => $row["reti_casa"],
+                        "reti_ospite" => $row["reti_ospite"]
+                    );
+                    $calendario[$nomeSquadra]["casa"][] = $partita;
+                } else {
+                    $partita = array(
+                        "id" => $row["id"],
+                        "giornata" => $row["giornata"],
+                        "squadra_casa" => $row["squadra_casa"],
+                        "reti_casa" => $row["reti_casa"],
+                        "reti_ospite" => $row["reti_ospite"]
+                    );
+                    $calendario[$nomeSquadra]["ospite"][] = $partita;
+                }
+            }
+        }
+    }
+    return $calendario;
+}
+
 ?>
+
+
+

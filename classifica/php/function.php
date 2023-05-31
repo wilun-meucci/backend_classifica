@@ -145,7 +145,7 @@ function checkDay($giornata)
         return true;
     }
     $partite = listPartite();
-    foreach ($partite as $i => $partita) 
+    foreach ($partite as $partita) 
     {
         if($giornata > $partita["giornata"])
         {

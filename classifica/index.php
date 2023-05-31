@@ -20,9 +20,7 @@ if(isset($_GET))
     }
     else
     {
-        // echo "on no";
         $combinations = generateCombinations(listSquadre());
-        // print_r(listSquadre());
         addCalendario(listSquadre());
     }
 }
@@ -41,9 +39,8 @@ if(isset($_GET["squadre"]))
     echo json_encode($data);
 }
 
-if(isset($_GET["creaCalendario"]))
+if(isset($_GET["nonServe"]))
 {
-    
     $request = $_GET["creaCalendario"];
     if($request=="squadre")
     {
@@ -115,7 +112,6 @@ if(isset($_GET["giocaGiornata"]))
 
 if(isset($_GET["giocaCampionato"]))
 {
-    
     if($_GET["giocaCampionato"] == "random")
     {
         for ($giornata=0; $giornata <= 38; $giornata++) { 
@@ -138,9 +134,14 @@ if(isset($_GET["calendario"]))
     $request = $_GET["calendario"];
     if($request=="giorni")
     {
-        print_r($combinations);
-        $dayCombinations = generateMatchesByDay(listSquadre());
-        echo json_encode($dayCombinations);
+        $calendarioDays = getCalendarioByDay();
+        // print_r($calendarioDays);
+        echo json_encode($calendarioDays);
+    }
+    else if($request=="squadre")
+    {
+        $calendarioTeams = getCalendarioByTeams();
+        echo json_encode($calendarioTeams);
     }
     else{
         $calendario = getCalendario($_GET["orderBy"]);
