@@ -11,7 +11,21 @@ require_once "./db/databaseUpdate.php";
 require_once "./php/function.php";
 
 
-
+if(isset($_GET))
+{
+    if(checkCalendarioEsistente())
+    {
+        unset($combinations);
+        $combinations = getCalendarioBase();
+    }
+    else
+    {
+        // echo "on no";
+        $combinations = generateCombinations(listSquadre());
+        // print_r(listSquadre());
+        addCalendario(listSquadre());
+    }
+}
 
 
 if(isset($_GET["squadra"]))
@@ -23,24 +37,13 @@ if(isset($_GET["squadra"]))
 if(isset($_GET["squadre"]))
 {
     $data = listSquadre();
-    //print_r($data);
+    // print_r($data);
     echo json_encode($data);
 }
 
 if(isset($_GET["creaCalendario"]))
 {
-    if(checkCalendarioEsistente())
-    {
-        unset($combinations);
-        $combinations = getCalendarioBase();
-    }
-    else
-    {
-        // echo "on no";
-        $combinations = generateCombinations(listSquadre());
-        //print_r($combinations);
-        addCalendario($combinations);
-    }
+    
     $request = $_GET["creaCalendario"];
     if($request=="squadre")
     {
@@ -68,7 +71,7 @@ if(isset($_GET["creaCalendario"]))
     }
     else if($request=="giorni")
     {   
-        $dayCombinations = generateMatchesByDay($combinations);
+        $dayCombinations = generateMatchesByDay(listSquadre());
         echo json_encode($dayCombinations);
     }
     else
@@ -110,10 +113,40 @@ if(isset($_GET["giocaGiornata"]))
     }
 }
 
+if(isset($_GET["giocaCampionato"]))
+{
+    
+    if($_GET["giocaCampionato"] == "random")
+    {
+        for ($giornata=0; $giornata <= 38; $giornata++) { 
+            addGiornata($giornata);
+        }
+        $calendario = getCalendario($_GET["orderBy"]);
+        echo json_encode($calendario);
+        
+    }
+}
+
 if(isset($_GET["classifica"]))
 {
     $classifica = getClassifica();
     echo json_encode($classifica);
+}
+
+if(isset($_GET["calendario"]))
+{
+    $request = $_GET["calendario"];
+    if($request=="giorni")
+    {
+        print_r($combinations);
+        $dayCombinations = generateMatchesByDay(listSquadre());
+        echo json_encode($dayCombinations);
+    }
+    else{
+        $calendario = getCalendario($_GET["orderBy"]);
+        echo json_encode($calendario);
+    }
+    
 }
 
 

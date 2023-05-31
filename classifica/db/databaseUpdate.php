@@ -58,12 +58,9 @@ function addGiornata($giornata)
     if(checkDay($giornata))
     {
         $partiteGiornata = getGiornata($giornata);
-        // print_r($partiteGiornata);
-        // echo "<br>----------------------------<br>";
         foreach ($partiteGiornata as $partita) 
         {
             $result = generateRandomResult($_GET["min"] ?? 0,$_GET["max"] ?? 10);
-            // echo"<br>giornata: ". $giornata, "casa: ". $partita["casa"], "ospite: ". $partita["ospite"],"reti :". $result["casa"], $result["ospite"],"<br>";
             if(addPartita($giornata, $partita["casa"], $partita["ospite"], $result["casa"], $result["ospite"]) )
             {
             }
@@ -73,7 +70,6 @@ function addGiornata($giornata)
         return true;
     }else 
     {
-
         return false;
     }
 }

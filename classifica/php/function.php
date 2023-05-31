@@ -54,39 +54,49 @@ function printCombinations($combinations) {
     }
 }
 
-function generateMatchesByDay($combinations) {
-    $matchesPerDay = 10;
-    $matchesPerSeason = 380;
-    $days = 38;
+function generateMatchesByDay(array $teams): array {
+    $numplayers = count($teams);
 
-    $matches = array();
-    $teamsPlayed = array();
+    if ($numplayers % 2 != 0)
+        $numplayers++;
 
-    for ($day = 1; $day <= $days; $day++) {
-        $matchesOfDay = array();
+    $days = [];
 
-        for ($matchIndex = 0; $matchIndex < $matchesPerDay; $matchIndex++) {
-            $validMatchFound = false;
+    for ($round = 0; $round < $numplayers - 1; $round++) {
+        $day = [];
+        $match = [ $teams[0]['nome'] ];
 
-            while (!$validMatchFound) {
-                $combinationIndex = array_rand($combinations);
-                $match = $combinations[$combinationIndex];
+        for ($i = 0; $i < $numplayers - 1; $i++) {
+            if ($i % 2 == 0)
+                $player = ($numplayers - 2) - $i / 2 - $round;
+            else
+                $player = ($i - 1) / 2 - $round;
 
-                if (!in_array($match[0], $teamsPlayed) && !in_array($match[1], $teamsPlayed)) {
-                    $validMatchFound = true;
-                    $teamsPlayed[] = $match[0];
-                    $teamsPlayed[] = $match[1];
-                }
+            if ($player < 0)
+                $player += $numplayers - 1;
+
+            array_push($match, $teams[$player + 1]['nome']);
+
+            if ($i % 2 == 0)
+            {
+                array_push($day, $match);
+                $match = [];
             }
-
-            $matchesOfDay[] = $match;
         }
 
-        $matches[] = $matchesOfDay;
-        $teamsPlayed = array();
+        array_push($days, $day);
     }
 
-    return $matches;
+    foreach ($days as $day) {
+        $mirror = [];
+
+        foreach ($day as [ $a, $b ])
+            array_push($mirror, [ $b, $a ]);
+
+        array_push($days, $mirror);
+    }
+
+    return $days;
 }
 function getTeams($name, $teamsCombinations) {
     $teams = array();

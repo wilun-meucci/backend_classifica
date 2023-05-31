@@ -5,10 +5,11 @@
     // require("databaseQuery.php");
 
     function addCalendario($combinations) {
+
         global $connessione;
-        $matches = generateMatchesByDay($combinations);
-        print_r($matches);
         $day = 1;
+        $matches = generateMatchesByDay($combinations);
+        // print_r($matches);
         foreach ($matches as $matchesOfDay) {
             foreach ($matchesOfDay as $match) {
                 $squadraCasa = getSquadra($match[0])["id"]; 

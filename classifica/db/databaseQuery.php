@@ -65,44 +65,19 @@
 
     function getCalendarioBase() {
         global $connessione;
-        $query = "SELECT DISTINCT sc.nome AS squadra_casa, so.nome AS squadra_ospite
+        $query = "SELECT sc.nome AS squadra_casa, so.nome AS squadra_ospite
         FROM partita p
         JOIN squadra sc ON p.squadra_casa = sc.id
         JOIN squadra so ON p.squadra_ospite = so.id;";
         $result = $connessione->query($query);
         $calendario = array();
         while ($row = $result->fetch_assoc()) {
-            $partita = array($row['squadra_casa'], $row['squadra_ospite']);
+            $partita = array("casa"=>$row['squadra_casa'],"ospite"=> $row['squadra_ospite']);
             $calendario[] = $partita;
         }
         return $calendario;
     }
-    function old_exitResultToGame($casa, $ospite)
-    {
-        global $connessione;
-        $retiCQuery = "SELECT reti_casa
-                    FROM partita
-                    WHERE squadra_casa = $casa AND squadra_ospite = $ospite";
-        $retiOQuery = "SELECT reti_ospite
-                    FROM partita
-                    WHERE squadra_casa = $casa AND squadra_ospite = $ospite";
-        
-        $retiCResult = $connessione->query($retiCQuery);
-        $retiOResult = $connessione->query($retiOQuery);
-        
-        $retiCasa = $retiCResult->fetch_assoc()["reti_casa"];
-        $retiOspite = $retiOResult->fetch_assoc()["reti_ospite"];
-        
-        if (empty($retiCasa) || is_null($retiCasa)) {
-            return true;
-        }
-        
-        if (empty($retiOspite) || is_null($retiOspite)) {
-            return true;
-        }
-        
-        return false;
-}
+    
 
 
 
@@ -197,6 +172,38 @@ function getClassifica(){
         return $data;
     }
 }
+
+function getCalendario($orderMode)
+{
+    global $connessione; 
+    if (!empty($orderMode)) {
+        $orderByClause = "ORDER BY $orderMode ASC";
+    } else {
+        $orderByClause = "ORDER BY giornata ASC";
+    }
+
+    $query = "SELECT p.id, p.giornata, sc.nome AS squadra_casa, so.nome AS squadra_ospite, p.reti_casa, p.reti_ospite
+    FROM partita p
+    JOIN squadra sc ON p.squadra_casa = sc.id
+    JOIN squadra so ON p.squadra_ospite = so.id
+    $orderByClause";
+
+    $result = $connessione->query($query);
+    $calendario = array();
+    while ($row = $result->fetch_assoc()) {
+        $partita = array(
+            'idPartita' => $row['id'],
+            'giornata' => $row['giornata'],
+            'squadra_casa' => $row['squadra_casa'],
+            'squadra_ospite' => $row['squadra_ospite'],
+            'reti_casa' => $row['reti_casa'],
+            'reti_ospite' => $row['reti_ospite']
+        );
+        $calendario[] = $partita;
+    }
+    return $calendario;
+}
+
 
 
 ?>

@@ -93,30 +93,121 @@ header('Content-Type: application/json; charset=utf-8');
             echo "La squadra $team compare come ospite $count volte.\n";
         }
     }
-    
-
-    function generateMatchesByDay($combinations) {
+function new_old_generateMatchesByDay($combinations) {
         $days = [];
-
         do {
             $new_combinations = [];
             $day = [];
-
             foreach ($combinations as $combination) {
-                if (count($day) > 10)
+                if (count($day) > 10 )
                     break;
-
                 $skip_combination = false;
-
                 foreach ($day as $match) {
                     $skip_combination |= in_array($combination[0], $match) || in_array($combination[1], $match);
                 }
-
                 if ($skip_combination)
                     array_push($new_combinations, $combination);
                 else
                     array_push($day, $combination);
             }
+            array_push($days, $day);
+            $combinations = $new_combinations;
+        } while (count($combinations) > 0);
+        return $days;
+    }
+
+    function generateMatchesByDay($combinations) {
+        $days = [];
+        do {
+            $new_combinations = [];
+            $day = [];
+            // if(count($days) == 6)
+            // {
+            //     foreach ($combinations as $combination) 
+            //     {
+            //         #echo "combination: ". print_r($combination)."\n";
+            //         do{
+            //             $skip_combination = false;
+    
+            //             foreach ($day as $match) {
+            //                 // echo "day: ";
+            //                 // print_r($day);
+            //                 // echo "\n";
+            //                 // echo "------------match: ";
+            //                 // print_r($match);
+            //                 // echo "\n";
+            //                 // echo "match: ". print_r($match)."\n";
+            //                 // echo "in_array($ combination[0], $ match): ".  in_array($combination[0], $match)."\n";
+            //                 // echo "in_array($ combination[1], $ match): ".  in_array($combination[1], $match)."\n";
+            //                 $skip_combination |= in_array($combination[0], $match) || in_array($combination[1], $match);
+            //             }
+    
+            //             if ($skip_combination)
+            //                 array_push($new_combinations, $combination);
+            //             else
+            //                 array_push($day, $combination);
+                        
+            //         }while(count($day)>10);
+            //     }
+            // }
+            // else 
+            // {
+            //     foreach ($combinations as $combination) 
+            //     {
+            //         do{
+            //             $skip_combination = false;
+    
+            //             foreach ($day as $match) {
+            //                 $skip_combination |= in_array($combination[0], $match) || in_array($combination[1], $match);
+            //                 if ($skip_combination)
+            //                 {
+            //                     break;
+            //                 }
+            //             }
+    
+            //             if ($skip_combination)
+            //                 array_push($new_combinations, $combination);
+            //             else
+            //                 array_push($day, $combination);
+                        
+            //         }while(count($day)>10);
+            //     }
+            // }
+
+
+
+
+
+
+
+
+
+
+            //------------------------------------------------------------------------
+            foreach ($combinations as $combination) 
+                {
+                    do{
+                        $skip_combination = false;
+    
+                        foreach ($day as $match) {
+                            $skip_combination |= in_array($combination[0], $match) || in_array($combination[1], $match);
+                            if ($skip_combination)
+                            {
+                                break;
+                            }
+                        }
+    
+                        if ($skip_combination)
+                            array_push($new_combinations, $combination);
+                        else
+                            array_push($day, $combination);
+                        
+                    }while(count($day)>10);
+                }
+            
+            // echo "days: ". count($days)."\n";
+            // echo "combinations: ". count($combinations)."\n";
+            // echo "new_combinations: ".count($new_combinations)."\n";
 
             array_push($days, $day);
             $combinations = $new_combinations;
@@ -124,12 +215,17 @@ header('Content-Type: application/json; charset=utf-8');
 
         return $days;
     }
+    
+    
+    
+    
 
 $combinations = generateCombinations(listSquadre());
-#$dayCombinations = old_generateMatchesByDay($combinations);
-countTeamOccurrences(generateMatchesByDay($combinations));
+$dayCombinations = generateMatchesByDay($combinations);
+
+countTeamOccurrences($dayCombinations);
+echo "giornate: ".count($dayCombinations)."\n<br>";
 
 
-
-print_r(generateMatchesByDay($combinations));
+print_r($dayCombinations);
 ?>
