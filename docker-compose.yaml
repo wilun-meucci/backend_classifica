@@ -1,4 +1,4 @@
-version: "2.2"
+version: "3"
 services:
   backend-container:
     build: .
@@ -6,17 +6,33 @@ services:
       - ./classifica:/var/www/html
     ports:
       - 9090:80
-  db-container:
-    image: mysql:5.7
-    environment:
-      - MYSQL_ROOT_PASSWORD= ciccio
-    volumes:
-      - ./dati-mysql:/var/lib/mysql
-    ports:
-      - 3306:3306
+  db:
+        image: mariadb:latest
+        restart: always
+        environment:
+            MYSQL_USER: root
+            MYSQL_PASSWORD: pw
+            MYSQL_ROOT_PASSWORD: pw
+            MYSQL_DATABASE: serie_a
+        volumes:
+            - ./db.sql:/docker-entrypoint-initdb.d/db.sql
+        ports:
+            - 3306:3306
+            
+            
+  #   image: mysql:5.7
+  #   environment:
+  #     - MYSQL_ROOT_PASSWORD=ciccio
+  #   volumes:
+  #     - ./dati-mysql/mysql:/var/lib/mysql
+  #     - ./classifica/db:/docker-entrypoint-initdb.d
+  #   ports:
+  #     - 3306:3306
+  #   command: ["sh", "-c", "docker-entrypoint.sh --ignore-db-dir=/docker-entrypoint-initdb.d/import-data.sh"]
   phpmyadmin:
     image: phpmyadmin
     ports:
       - 9091:80
     environment:
       - PMA_ARBITRARY=1
+

@@ -1,15 +1,5 @@
--- Eliminazione delle tabelle (se esistono)
-DROP TABLE IF EXISTS classifica;
-DROP TABLE IF EXISTS partita;
-DROP TABLE IF EXISTS squadra;
-
--- Eliminazione del database (se esiste)
 DROP DATABASE IF EXISTS serie_a;
-
--- Creazione del database
 CREATE DATABASE serie_a;
-
--- Selezione del database
 USE serie_a;
 
 -- Creazione della tabella "squadra"
@@ -65,3 +55,4 @@ INSERT INTO `squadra` (`id`, `nome`) VALUES
 (18, 'spezia'),
 (19, 'torino'),
 (20, 'udinese');
+
